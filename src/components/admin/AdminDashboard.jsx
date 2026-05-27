@@ -87,9 +87,56 @@ export default function AdminDashboard() {
       ? attendanceData
       : attendanceData.filter((d) => d.username === selectedUser);
 
+  const formatToHours = (seconds) => {
+    if (seconds === undefined || seconds === null || isNaN(seconds)) return "0 hrs";
+    const hours = seconds / 3600;
+    return `${hours.toFixed(2)} hrs`;
+  };
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return "-";
+    return new Date(dateString).toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+    });
+  };
+
   const exportToExcel = () => {
     if (filteredData.length === 0) return alert("No data to export!");
-    const ws = XLSX.utils.json_to_sheet(filteredData);
+
+    const rows = [
+      [
+        "ID",
+        "Start",
+        "End",
+        "Worked",
+        "Breaks",
+        "Total Break",
+        "Username",
+      ],
+      ...filteredData.map((item) => [
+        item.id,
+        formatDateTime(item.startTime),
+        formatDateTime(item.endTime),
+        formatToHours(item.workedDuration),
+        item.breakCount,
+        item.totalBreakDuration
+          ? formatToHours(item.totalBreakDuration)
+          : "0 hrs",
+        item.username,
+      ]),
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws["!cols"] = [
+      { wch: 10 },
+      { wch: 24 },
+      { wch: 24 },
+      { wch: 14 },
+      { wch: 8 },
+      { wch: 14 },
+      { wch: 20 },
+    ];
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Attendance");
     const fileName =

@@ -1,11 +1,14 @@
 export default function AttendanceTable({
-  data,
-  users,
+  data = [],
+  users = [],
   selectedUser,
   onSelectUser,
   onExport,
   onBack,
 }) {
+  const validData = Array.isArray(data) ? data : [];
+  const validUsers = Array.isArray(users) ? users : [];
+
   // ✅ Convert seconds to decimal hours (e.g., 3.75 hrs)
   const formatToHours = (seconds) => {
     if (!seconds || isNaN(seconds)) return "0 hrs";
@@ -33,9 +36,12 @@ export default function AttendanceTable({
           onChange={(e) => onSelectUser(e.target.value)}
           className="p-2 border border-gray-300 rounded-lg shadow-sm"
         >
-          {users.map((user) => (
+          <option key="all" value="All">
+            All Users
+          </option>
+          {validUsers.map((user) => (
             <option key={user} value={user}>
-              {user === "All" ? "All Users" : user}
+              {user}
             </option>
           ))}
         </select>
@@ -69,7 +75,7 @@ export default function AttendanceTable({
             </tr>
           </thead>
           <tbody>
-            {data.map((r) => (
+            {validData.map((r) => (
               <tr key={r.id} className="hover:bg-blue-50">
                 <td className="p-3 border border-gray-200">{r.id}</td>
 
