@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const BASE_URL = "https://attendance-backend-1-pzsj.onrender.com/leaves/balances";
+const BASE_URL = "https://attendance-backend-1-pzsj.onrender.com"
 
 export default function AdminLeaveBalance({ data, onBack }) {
   const [balances, setBalances] = useState([]);
@@ -25,26 +25,49 @@ export default function AdminLeaveBalance({ data, onBack }) {
   const handleEdit = (index) => {
     setEditingRow(index);
   };
-
   const handleSave = async (employee) => {
-    try {
-      await axios.put(
-        `${BASE_URL}/leaves/balance/${employee.name}`,
-        {
-          sickLeave: employee.sickLeave,
-          personalLeave: employee.personalLeave,
-          earnedLeave: employee.earnedLeave,
-          maternityLeave: employee.maternityLeave,
-        }
-      );
+  try {
+    const url = `${BASE_URL}/leaves/balance/${encodeURIComponent(
+      employee.name
+    )}`;
 
-      alert("Leave balance updated successfully");
-      setEditingRow(null);
-    } catch (error) {
-      console.error(error);
-      alert("Failed to update leave balance");
+    const payload = {
+      sickLeave: Number(employee.sickLeave),
+      personalLeave: Number(employee.personalLeave),
+      earnedLeave: Number(employee.earnedLeave),
+      maternityLeave: Number(employee.maternityLeave),
+    };
+
+    console.log("PUT URL =>", url);
+    console.log("PAYLOAD =>", payload);
+
+    const response = await axios.put(url, payload);
+
+    console.log("SUCCESS =>", response.data);
+
+    alert("Leave balance updated successfully");
+    setEditingRow(null);
+  } catch (error) {
+    console.error("FULL ERROR =>", error);
+
+    if (error.response) {
+      console.log("STATUS =>", error.response.status);
+      console.log("DATA =>", error.response.data);
+
+      alert(
+        `Status: ${error.response.status}\n${JSON.stringify(
+          error.response.data,
+          null,
+          2
+        )}`
+      );
+    } else {
+      alert(error.message);
     }
-  };
+  }
+};
+
+ 
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">

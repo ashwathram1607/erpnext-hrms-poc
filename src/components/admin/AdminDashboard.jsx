@@ -4,8 +4,8 @@ import * as XLSX from "xlsx";
 import AttendanceTable from "./AttendanceTable";
 import LeaveTable from "./LeaveTable";
 import PermissionTable from "./PermissionTable";
-import UsersTable from "./UsersTable"; 
-import AdminLeaveBalance from "./AdminLeaveBalance";
+import UsersTable from "./UsersTable";
+import AdminLeaveBalance from "./AdminLeaveBalance"; // ✅ already used
 import { motion } from "framer-motion";
 
 export default function AdminDashboard() {
@@ -14,86 +14,81 @@ export default function AdminDashboard() {
   const [leaveData, setLeaveData] = useState([]);
   const [permissionData, setPermissionData] = useState([]);
   const [usersData, setUsersData] = useState([]);
-  const [balanceData, setBalanceData] = useState([]);
+  const [balanceData, setBalanceData] = useState([]); // ✅ ADDED
   const [selectedUser, setSelectedUser] = useState("All");
 
+  const BASE_URL = "https://attendance-backend-1-pzsj.onrender.com";
+
+  // ================= FETCH ON TAB CHANGE =================
   useEffect(() => {
     if (activeTab === "attendance") fetchAttendance();
     if (activeTab === "leaves") fetchLeaves();
     if (activeTab === "permission") fetchPermissions();
     if (activeTab === "users") fetchUsers();
-    if (activeTab === "leaveBalance") fetchBalances();
+    if (activeTab === "leaveBalance") fetchBalances(); // ✅ ADDED
   }, [activeTab]);
 
+  // ================= ATTENDANCE =================
   const fetchAttendance = async () => {
     try {
-      const res = await axios.get(
-        "https://attendance-backend-1-pzsj.onrender.com/attendance",
-      );
+      const res = await axios.get(`${BASE_URL}/attendance`);
       setAttendanceData(res.data);
     } catch (err) {
       console.error("Error fetching attendance", err);
     }
   };
 
+  // ================= LEAVES =================
   const fetchLeaves = async () => {
     try {
-      const res = await axios.get(
-        "https://attendance-backend-1-pzsj.onrender.com/leaves",
-      );
+      const res = await axios.get(`${BASE_URL}/leaves`);
       setLeaveData(res.data);
     } catch (err) {
       console.error("Error fetching leaves", err);
     }
   };
 
+  // ================= PERMISSIONS =================
   const fetchPermissions = async () => {
     try {
-      const res = await axios.get(
-        "https://attendance-backend-1-pzsj.onrender.com/permission",
-      );
+      const res = await axios.get(`${BASE_URL}/permission`);
       setPermissionData(res.data);
     } catch (err) {
       console.error("Error fetching permissions", err);
     }
   };
 
-  // ✅ NEW FUNCTION
+  // ================= USERS =================
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem("token"); // ✅ get token
+      const token = localStorage.getItem("token");
 
-      const res = await axios.get(
-        "https://attendance-backend-1-pzsj.onrender.com/users",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // ✅ send token
-          },
+      const res = await axios.get(`${BASE_URL}/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       setUsersData(res.data);
     } catch (err) {
       console.error("Error fetching users", err);
     }
   };
+
+  // ================= LEAVE BALANCES (ADDED - FIXED) =================
   const fetchBalances = async () => {
-  try {
-    const res = await axios.get(
-      "https://attendance-backend-1-pzsj.onrender.com/leaves/balances"
-    );
-
-    setBalanceData(res.data);
-  } catch (err) {
-    console.error("Error fetching leave balances", err);
-  }
-};
-
+    try {
+      const res = await axios.get(`${BASE_URL}/leaves/balances`);
+      setBalanceData(res.data);
+    } catch (err) {
+      console.error("Error fetching leave balances", err);
+    }
+  };
 
   const uniqueUsers = [
     "All",
     ...new Set(
-      attendanceData.map((d) => d.username).filter((u) => u && u.trim() !== ""),
+      attendanceData.map((d) => d.username).filter((u) => u && u.trim() !== "")
     ),
   ];
 
@@ -103,7 +98,8 @@ export default function AdminDashboard() {
       : attendanceData.filter((d) => d.username === selectedUser);
 
   const formatToHours = (seconds) => {
-    if (seconds === undefined || seconds === null || isNaN(seconds)) return "0 hrs";
+    if (seconds === undefined || seconds === null || isNaN(seconds))
+      return "0 hrs";
     const hours = seconds / 3600;
     return `${hours.toFixed(2)} hrs`;
   };
@@ -119,15 +115,7 @@ export default function AdminDashboard() {
     if (filteredData.length === 0) return alert("No data to export!");
 
     const rows = [
-      [
-        "ID",
-        "Start",
-        "End",
-        "Worked",
-        "Breaks",
-        "Total Break",
-        "Username",
-      ],
+      ["ID", "Start", "End", "Worked", "Breaks", "Total Break", "Username"],
       ...filteredData.map((item) => [
         item.id,
         formatDateTime(item.startTime),
@@ -142,22 +130,15 @@ export default function AdminDashboard() {
     ];
 
     const ws = XLSX.utils.aoa_to_sheet(rows);
-    ws["!cols"] = [
-      { wch: 10 },
-      { wch: 24 },
-      { wch: 24 },
-      { wch: 14 },
-      { wch: 8 },
-      { wch: 14 },
-      { wch: 20 },
-    ];
-
     const wb = XLSX.utils.book_new();
+
     XLSX.utils.book_append_sheet(wb, ws, "Attendance");
+
     const fileName =
       selectedUser === "All"
         ? "All_Attendance.xlsx"
         : `${selectedUser}_Attendance.xlsx`;
+
     XLSX.writeFile(wb, fileName);
   };
 
@@ -213,12 +194,11 @@ export default function AdminDashboard() {
               tab: "users",
             },
             {
-
               title: "Leave Balances",
               desc: "View and edit employee leave balances.",
               color: "from-cyan-500 to-blue-500",
               tab: "leaveBalance",
-             },
+            },
           ].map((card, i) => (
             <motion.div
               key={card.title}
@@ -242,7 +222,6 @@ export default function AdminDashboard() {
       </div>
     );
 
-
   // ================= TABS =================
   if (activeTab === "attendance")
     return (
@@ -265,8 +244,11 @@ export default function AdminDashboard() {
     );
 
   if (activeTab === "users")
-    return <UsersTable data={usersData} onBack={() => setActiveTab("")} />;
+    return (
+      <UsersTable data={usersData} onBack={() => setActiveTab("")} />
+    );
 
+  // ✅ ADDED (NO DESIGN CHANGE)
   if (activeTab === "leaveBalance")
     return (
       <AdminLeaveBalance
@@ -277,4 +259,3 @@ export default function AdminDashboard() {
 
   return null;
 }
-
