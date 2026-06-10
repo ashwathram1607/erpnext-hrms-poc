@@ -19,30 +19,27 @@ export default function Login() {
   // ✅ Login mutation
   const loginMutation = useMutation({
     mutationFn: async (data) => {
-      const res = await axios.post(
-       " https://attendance-backend-1-pzsj.onrender.com/auth/login", // 🔁 Use your local backend for testing
-        {
-          email: data.Email,
-          password: data.Password,
+    const res = await axios.post(
+      "http://localhost:8000/api/method/login",
+      {
+        usr: data.Email,
+        pwd: data.Password,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
-      );
+        withCredentials: true,
+      }
+    );
       return res.data; // { access_token, user: { ... } }
     },
 
     onSuccess: (data) => {
-      const user = data.user;
-      console.log("✅ User Data:", user);
-
-      // ✅ Save all necessary fields in localStorage
-      localStorage.setItem("token", data.access_token);
-      localStorage.setItem("id", user.id);
-      localStorage.setItem("name", user.name);
-      localStorage.setItem("email", user.email);
-      localStorage.setItem("role", user.role || "employee");
-      localStorage.setItem("designation", user.designation || ""); // ✅ store designation
-      localStorage.setItem("employeeId", user.employeeId || ""); // ✅ store employeeId
-
-      // ✅ Dialog + redirect
+      console.log("✅ User Data:", data);
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("full_name", data.full_name);
       setDialog({ isOpen: true, message: "Login successful!" });
       setFormData({ Email: "", Password: "" });
       setTimeout(() => navigate("/dashboard"), 1000);

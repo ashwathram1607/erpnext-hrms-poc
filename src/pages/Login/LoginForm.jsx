@@ -30,7 +30,7 @@ export default function LoginForm({ handleChange, handleSubmit, formData }) {
             {LABELS.EMAIL}
           </label>
           <input
-            type="email"
+            type="text"
             name="Email"
             placeholder="you@ascentwarecorp.com"
             onChange={handleChange}

@@ -7,12 +7,69 @@ export default function StaffList({ setActivePage }) {
   const [deleteId, setDeleteId] = useState(null); // dialog state
 
   const fetchStaff = async () => {
+    const formData = new FormData();
+
+formData.append("doctype", "Employee");
+
+formData.append(
+  "fields",
+  JSON.stringify([
+    "`tabEmployee`.`name`",
+    "`tabEmployee`.`owner`",
+    "`tabEmployee`.`creation`",
+    "`tabEmployee`.`modified`",
+    "`tabEmployee`.`modified_by`",
+    "`tabEmployee`.`_user_tags`",
+    "`tabEmployee`.`_comments`",
+    "`tabEmployee`.`_assign`",
+    "`tabEmployee`.`_liked_by`",
+    "`tabEmployee`.`docstatus`",
+    "`tabEmployee`.`idx`",
+    "`tabEmployee`.`employee_name`",
+    "`tabEmployee`.`status`",
+    "`tabEmployee`.`designation`",
+    "`tabEmployee`.`ctc`",
+    "`tabEmployee`.`image`",
+    "`tabEmployee`.`branch`",
+    "`tabEmployee`.`department`",
+    "`tabEmployee`.`salary_currency`"
+  ])
+);
+
+formData.append(
+  "filters",
+  JSON.stringify([
+    ["Employee", "status", "=", "Active"]
+  ])
+);
+
+formData.append(
+  "order_by",
+  "`tabEmployee`.`modified` desc"
+);
+
+formData.append("start", "0");
+formData.append("page_length", "20");
+formData.append("view", "List");
+formData.append("group_by", "");
+formData.append("with_comment_count", "true");
     try {
+      
       const res = await fetch(
-        "https://attendance-backend-1-pzsj.onrender.com/staff",
+       "http://localhost:8000/api/method/frappe.desk.reportview.get",
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+      
+        "X-Frappe-CSRF-Token":
+        window.frappe?.csrf_token || "",
+      },
+      body: formData,
+    }
       );
       const data = await res.json();
-      setStaff(data);
+      setStaff(data?.message || []);
     } catch (err) {
       console.log(err);
     }
@@ -24,11 +81,20 @@ export default function StaffList({ setActivePage }) {
 
   const handleDelete = async () => {
     if (!deleteId) return;
-
+    const formData = new FormData();
+    formData.append("doctype", "Employee");
+    formData.append("name", deleteId);
     try {
       await fetch(
-        `https://attendance-backend-1-pzsj.onrender.com/staff/${deleteId}`,
-        { method: "DELETE" },
+        `http://localhost:8000/api/method/frappe.client.delete`,
+        {
+          method: "POST",
+          headers: {
+            "X-Frappe-CSRF-Token": window.frappe?.csrf_token || "",
+          },
+          credentials: "include",
+          body: formData,
+        }
       );
       setDeleteId(null);
       fetchStaff();

@@ -18,7 +18,7 @@ const EmpSidebar = ({ isOpen, onNavigate, activePage }) => {
   const [role, setRole] = useState("");
 
   useEffect(() => {
-    const storedRole = localStorage.getItem("role") || "employee";
+    const storedRole = localStorage.getItem("role") ;
     setRole(storedRole);
   }, []);
 
@@ -51,7 +51,7 @@ const EmpSidebar = ({ isOpen, onNavigate, activePage }) => {
       />
 
       {/* Admin Only Section */}
-      {role === "admin" && (
+      {/* {role === "admin" && ( */}
         <>
           <EmpSidebarItem
             icon={<FaUsers />}
@@ -72,7 +72,7 @@ const EmpSidebar = ({ isOpen, onNavigate, activePage }) => {
             active={activePage === ROUTES.PAYROLL_DASHBOARD}
           />
         </>
-      )}
+      {/* )} */}
 
       {/* Employee Only Section */}
       {role === "employee" && (
