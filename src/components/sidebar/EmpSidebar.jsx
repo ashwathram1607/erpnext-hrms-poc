@@ -43,23 +43,29 @@ const EmpSidebar = ({ isOpen, onNavigate, activePage }) => {
       />
 
       {/* Calendar */}
-      <EmpSidebarItem
+      {/* <EmpSidebarItem
         icon={<FaRegCalendarAlt />}
         label="Calendar"
         onClick={() => onNavigate(ROUTES.CALENDARGRID)}
         active={activePage === ROUTES.CALENDARGRID}
-      />
+      /> */}
 
       {/* Admin Only Section */}
       {/* {role === "admin" && ( */}
         <>
           <EmpSidebarItem
             icon={<FaUsers />}
+            label="HR"
+            onClick={() => onNavigate(ROUTES.HR_DASHBOARD)}
+            active={activePage === ROUTES.HR_DASHBOARD}
+          />
+          <EmpSidebarItem
+            icon={<FaUsers />}
             label="Employees"
             onClick={() => onNavigate(ROUTES.STAFF_DASHBOARD)}
             active={activePage === ROUTES.STAFF_DASHBOARD}
           />
-          <EmpSidebarItem
+          {/* <EmpSidebarItem
             icon={<FaTable />}
             label="Admin Dashboard"
             onClick={() => onNavigate(ROUTES.ADMINDASHBOARD)}
@@ -70,7 +76,7 @@ const EmpSidebar = ({ isOpen, onNavigate, activePage }) => {
             label="Payroll"
             onClick={() => onNavigate(ROUTES.PAYROLL)}
             active={activePage === ROUTES.PAYROLL_DASHBOARD}
-          />
+          /> */}
         </>
       {/* )} */}
 
@@ -84,7 +90,7 @@ const EmpSidebar = ({ isOpen, onNavigate, activePage }) => {
         />
       )}
 
-      {/* Permission Dropdown */}
+      {/* Permission Dropdown
       <div className="mx-2 mt-3">
         <button
           className="w-full flex items-center justify-between bg-[#023e8a] px-4 py-3 rounded-lg text-lg font-semibold hover:bg-[#0353a4] transition"
@@ -123,7 +129,7 @@ const EmpSidebar = ({ isOpen, onNavigate, activePage }) => {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </div> */}
     </motion.aside>
   );
 };

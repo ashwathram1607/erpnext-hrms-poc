@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constants/routes";
 import { motion } from "framer-motion";
 
 export default function StaffDasboard({ setActivePage }) {
+  const navigate = useNavigate();
   const boxes = [
     {
       title: " Create",
@@ -51,7 +53,7 @@ export default function StaffDasboard({ setActivePage }) {
               rotate: 1,
               boxShadow: "0px 10px 25px rgba(0,0,0,0.15)",
             }}
-            onClick={() => setActivePage(box.route)}
+            onClick={() => navigate(box.route)}
             className={`bg-gradient-to-br ${box.color} text-white rounded-2xl shadow-lg p-10 text-center cursor-pointer transition-transform duration-300`}
           >
             <h2 className="text-2xl font-semibold mb-3">{box.title}</h2>

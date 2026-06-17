@@ -33,6 +33,9 @@ import Unauthorized from "../pages/Unauthorized";
 import NotFound from "../pages/NotFound"; // ⭐ ADD THIS
 import ForgotPassword from "../pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword/ResetPassword";
+import HRDashboard from "../pages/HR/HRDashboard";
+import HRSubDashboard from "../pages/HR/HRSubDashboard";
+import MainLayout from "../components/core/MainLayout";
 
 export default function AppRouter() {
   return (
@@ -47,9 +50,21 @@ export default function AppRouter() {
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
-          <Route path={ROUTES.SIDEBAR} element={<EmpSidebar />} />
-          <Route path={ROUTES.SIDEBARITEM} element={<EmpSidebarItem />} />
+            <Route element={<MainLayout />}>
+                <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+                <Route path={ROUTES.HR_DASHBOARD} element={<HRDashboard />} />
+                <Route path={ROUTES.HR_SUB_DASHBOARD} element={<HRSubDashboard />} />
+                <Route path={ROUTES.STAFF_DASHBOARD} element={<StaffDasboard />} />
+                 <Route path={ROUTES.STAFF_FORM} element={<StaffForm />} />
+          <Route path={ROUTES.STAFF_EDIT} element={<StaffEdit />} />
+          <Route path={ROUTES.STAFF_LIST} element={<StaffList />} />
+          <Route path={ROUTES.STAFF_TABLE} element={<StaffTable />} />
+            </Route>
+              
+
+          <Route path={ROUTES.STAFF_FORM} element={<StaffForm />} />
+                <Route path={ROUTES.SIDEBAR} element={<EmpSidebar />} />
+                <Route path={ROUTES.SIDEBARITEM} element={<EmpSidebarItem />} />
           <Route path={ROUTES.CALENDAR} element={<Calendar />} />
           <Route path={ROUTES.CALENDARGRID} element={<CalendarGrid />} />
           <Route path={ROUTES.EMPLOYEEPOPUP} element={<EmployeePopup />} />
@@ -86,11 +101,8 @@ export default function AppRouter() {
           <Route path={ROUTES.PAYROLL_GENERATE} element={<GeneratePayslip />} />
           <Route path={ROUTES.PAYSLIPFORM} element={<PayslipForm />} />
           <Route path={ROUTES.PAYROLL} element={<PayRoll />} />
-          <Route path={ROUTES.STAFF_FORM} element={<StaffForm />} />
-          <Route path={ROUTES.STAFF_EDIT} element={<StaffEdit />} />
-          <Route path={ROUTES.STAFF_LIST} element={<StaffList />} />
-          <Route path={ROUTES.STAFF_TABLE} element={<StaffTable />} />
-          <Route path={ROUTES.STAFF_DASHBOARD} element={<StaffDasboard />} />
+         
+
           <Route path={ROUTES.NEW_EMP_PAY} element={<NewEmpPayroll />} />
         </Route>
 

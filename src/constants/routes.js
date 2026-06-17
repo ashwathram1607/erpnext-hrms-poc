@@ -40,4 +40,6 @@ export const ROUTES = {
   NOTFOUND: "/notfound",
   FORGETPASSWORD: "/forgot-password",
   RESETPASSWORD: "/reset-password",
+  HR_DASHBOARD: "/hr-dashboard",
+  HR_SUB_DASHBOARD: "/hr-dashboard/:category",
 };

@@ -3,7 +3,7 @@ import LoginForm from "./LoginForm";
 import DialogBox from "./DialogBox";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import api from "../../services/api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -19,8 +19,8 @@ export default function Login() {
   // ✅ Login mutation
   const loginMutation = useMutation({
     mutationFn: async (data) => {
-    const res = await axios.post(
-      "http://localhost:8000/api/method/login",
+    const res = await api.post(
+      "/api/method/login",
       {
         usr: data.Email,
         pwd: data.Password,

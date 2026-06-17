@@ -40,26 +40,9 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
-      <header className="w-full fixed top-0 left-0 z-50 shadow-md bg-white">
-        <Navbar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
-      </header>
 
       <div className="flex pt-[70px] relative">
-        {/* Sidebar Overlay */}
-        <EmpSidebar
-          isOpen={isSidebarOpen}
-          onNavigate={setActivePage}
-          activePage={activePage}
-        />
-
-        {/* Optional overlay to close sidebar on click */}
-        {isSidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black/30 z-40"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
+ 
 
         {/* Main Content */}
         <div
@@ -69,8 +52,7 @@ export default function Dashboard() {
         >
           <main className="relative p-3 sm:p-6 md:p-8 overflow-y-auto origin-top scale-100 md:scale-[0.95] lg:scale-[0.95] xl:scale-[0.95]">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-8 gap-4 sm:gap-6">
-              {activePage === ROUTES.DASHBOARD && (
-                <>
+   
                   <div className="col-span-1 sm:col-span-2 bg-white p-4 rounded-xl shadow-md flex flex-col">
                     <EmployeeDetails />
                   </div>
@@ -86,10 +68,10 @@ export default function Dashboard() {
                   <div className="col-span-1 sm:col-span-2 lg:col-span-4 bg-white p-6 rounded-xl shadow-md flex flex-col pointer-events-none">
                     <CalendarGrid />
                   </div>
-                </>
-              )}
+             
+              
 
-              {/* Other Pages */}
+              {/* Other Pages
               {activePage === ROUTES.CALENDARGRID && (
                 <div className="col-span-1 lg:col-span-8 bg-white p-4 sm:p-6 rounded-xl shadow-md">
                   <CalendarGrid setActivePage={setActivePage} />
@@ -207,7 +189,7 @@ export default function Dashboard() {
                 <div className="col-span-1 lg:col-span-8 p-4 sm:p-6 rounded-xl shadow-md">
                   <Signup setActivePage={setActivePage} />
                 </div>
-              )}
+              )} */}
             </div>
           </main>
         </div>
